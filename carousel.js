@@ -22,16 +22,14 @@ imgNumber[0].css('font-weight','900');
 let s = 0; // i = index of active slide
 let n = 0;
 function nextSlide() {
-    if (s <= (collectionImg.length-2)) { // every time the user clicks on next button, until she displays the slide before the last(3rd/4)...
+    if (s < (collectionImg.length-1)) { // every time the user clicks on next button, until she displays the slide before the last(3rd/4)...
       s = s + 1; // show everytime she clicks, the slide that follow the current one (increase)
-      n = s - 1; // deactivate the number that precedes the current one
     } else if (s === (collectionImg.length-1)) { // if the user displays the last slide (4th)... 
       s = 0;// show the fisrt slide (reset)
-      n = imgNumber.length-1; // deactivate the last slide number 
     } 
     $('.slideImgContainer').html(collectionImg[s]);
-    imgNumber[s].css('font-weight','900');
-    imgNumber[n].css('font-weight','inherit');
+    imgNumber[n].css('font-weight','initial'); // Make the font of the previous slide number back to normal
+    n = s; imgNumber[n].css('font-weight','900'); // Change the value of current slide number to match the position of the slide displayed, then set the font
 }
 
 function previousSlide() {
@@ -41,7 +39,8 @@ function previousSlide() {
       s = (collectionImg.length-1);// Display the last slide  
     }
     $('.slideImgContainer').html(collectionImg[s]) 
-    imgNumber[s].css('text-decoration','underline') 
+    imgNumber[n].css('font-weight','initial');  
+    n = s; imgNumber[n].css('font-weight','900');
 }
 
 previous.click(previousSlide);
