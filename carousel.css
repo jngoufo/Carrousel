@@ -1,3 +1,14 @@
 #collection {
     display: none;
 }
+img.slideimg {
+    margin: 0 auto;
+}
+a.bullet {
+    bottom: 2em;
+    position: relative;
+    left: 46%;
+    margin: 0 auto;
+    opacity: 0.2;
+    font-size: x-small;
+}
