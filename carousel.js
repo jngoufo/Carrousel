@@ -1,9 +1,21 @@
 let collection = $('#collection img'), slide = $('#slide'), defaultImg = $('#defaultImg'),defaultImgsrc = $('#defaultImg').attr('src'), 
 collectionImg = [], imgBullet = [];
 
+$('#slidebtn').hide();
+
+function moveSlide() {
+  $('.slideimg').mouseenter(function(){
+    $('#slidebtn').show();  
+    $('.bullet').hide();
+  })
+  $('.slideimg').mouseleave(function(){
+    $('#slidebtn').hide();
+    $('.bullet').show();
+  })
+}
 
 function createBullet(){
-  $('#slideControls').append('<a class="bullet">&#9724;</a>');
+  $('#slideControls').append('<a class="bullet">&#9632;</a>');
 }
 
 // I collect the slides in an array and I create slide bullets
@@ -18,6 +30,7 @@ $('.slideImgContainer').html(collectionImg[0]);
 imgBullet[0].css('opacity','1');
 imgBullet[0].css('background-color','#fff');
 $('.slideImgContainer img').addClass('slideimg');
+moveSlide();
 
 // I set the mechanism to move to the next slide
 let s = 0; // i = index of active slide
@@ -35,9 +48,11 @@ function nextSlide() {
     n = s; 
     imgBullet[n].css('opacity','1'); // Change the value of current slide number to match the position of the slide displayed, then set the font
     imgBullet[n].css('background-color','#fff');
+    moveSlide();
 }
 
-$('.slideImgContainer').click(nextSlide)
+$('.slideImgContainer').click(nextSlide);
+$('#slidebtn').click(nextSlide);
 
 /*function previousSlide() {
     if ((!(s === 0)) && (s <= collectionImg.length) ) { // if the active slide is between 1 to 4...
