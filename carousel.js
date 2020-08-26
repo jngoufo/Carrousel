@@ -1,17 +1,33 @@
-let collection = $('#collection img'), slide = $('#slide'), defaultImg = $('#defaultImg'),defaultImgsrc = $('#defaultImg').attr('src'), 
-collectionImg = [], imgBullet = [];
+let collection = $('#collection img'), slide = $('#slide'), defaultImg = $('#defaultImg'),defaultImgsrc = $('#defaultImg').attr('src'), playSlide
+collectionImg = [], imgBullet = []; 
 
-$('#slidebtn').hide();
+$('#ctrlBtn').hide();
 
-function moveSlide() {
-  $('.slideimg').mouseenter(function(){
-    $('#slidebtn').show();  
+function changeCtrlBtn(){
+  $('#ctrlBtn').hover(function(){
+    $('#ctrlBtn').html('&#x25b6;')//play sign  
+    $('#ctrlBtn').css('cursor','pointer');
+  }, 
+  function(){
+    $('#ctrlBtn').html('&#x23f8;') //pause sign
+    $('#ctrlBtn').css('cursor','default');
+  });
+}
+
+function moveSlideIndicator() { // a signal showing the user that there is some sort of control on the slide moves 
+  $('.slideimg').hover(function(){
     $('.bullet').hide();
-  })
-  $('.slideimg').mouseleave(function(){
-    $('#slidebtn').hide();
-    $('.bullet').show();
-  })
+    $('#ctrlBtn').show();
+    changeCtrlBtn();    
+    $('.slideimg').css('cursor','pointer');
+    clearInterval(playSlide);
+  },
+  function(){
+  $('#ctrlBtn').hide();
+  $('.bullet').show();
+  $('.slideimg').css('cursor','default');
+  playSlide = setInterval(nextSlide,3000);
+  });
 }
 
 function createBullet(){
@@ -27,10 +43,11 @@ for(let c=0; c < collection.length; c++) {
 
 // I set the default active slide
 $('.slideImgContainer').html(collectionImg[0]);
+moveSlideIndicator();
 imgBullet[0].css('opacity','1');
 imgBullet[0].css('background-color','#fff');
 $('.slideImgContainer img').addClass('slideimg');
-moveSlide();
+playSlide = setInterval(nextSlide,3000);
 
 // I set the mechanism to move to the next slide
 let s = 0; // i = index of active slide
@@ -48,23 +65,10 @@ function nextSlide() {
     n = s; 
     imgBullet[n].css('opacity','1'); // Change the value of current slide number to match the position of the slide displayed, then set the font
     imgBullet[n].css('background-color','#fff');
-    moveSlide();
+    moveSlideIndicator();
 }
 
 $('.slideImgContainer').click(nextSlide);
-$('#slidebtn').click(nextSlide);
+$('#ctrlBtn').click(nextSlide);
 
-/*function previousSlide() {
-    if ((!(s === 0)) && (s <= collectionImg.length) ) { // if the active slide is between 1 to 4...
-      s = s - 1; // show the slide that precedes the active one (decrease)
-    } else { // if the active slide is the first one...   
-      s = (collectionImg.length-1);// Display the last slide  
-    }
-    $('.slideImgContainer').html(collectionImg[s]) 
-    imgNumber[n].css('font-size','initial');  
-    n = s; imgNumber[n].css('font-size','xxx-large');
-}
-
-previous.click(previousSlide);
-next.click(nextSlide) ;*/
 
