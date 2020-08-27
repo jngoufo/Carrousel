@@ -13,9 +13,8 @@ a.bullet {
     font-size: x-small;
 }
 #ctrlBtn {
-	position: relative;
-	left: 50%;
-	bottom: 2em;
-	font-size: medium;
-	opacity: .5;
+	position: absolute;
+	left: 97%;
+	top: 0em;
+	opacity: .2;
 }
