@@ -1,5 +1,5 @@
 let collection = $('#collection img'), slide = $('#slide'), defaultImg = $('#defaultImg'),defaultImgsrc = $('#defaultImg').attr('src'), playSlide
-collectionImg = [], imgBullet = []; 
+collectionImg = [], imgBullet = [], slideTimerControl= undefined; 
 
 $(document).ready(function(){
 $('#ctrlBtn').hide();
@@ -17,7 +17,7 @@ function controlSlideChange() { // a signal showing the user that there is some 
 }
 
 function createBullet(){
-  $('#slideControls').append('<a class="bullet">&#9632;</a>');
+  $('#slidebullets').append('<a class="bullet">&#9632;</a>');
 }
 
 // I set the mechanism to move to the next slide
@@ -47,11 +47,26 @@ function autoSlidechange() {
   controlSlideChange();
   // I set the default active slide
   $('.slideImgContainer').html(collectionImg[0]);
-  imgBullet[0].css('opacity','1');
-  imgBullet[0].css('background-color','#fff');
+  imgBullet[0].css({'opacity':'1','background-color':'#fff'});
   $('.slideImgContainer img').addClass('slideimg');
   playSlide = setInterval(autoSlidechange,3000);
   $('.slideImgContainer').click(autoSlidechange);
-  $('#ctrlBtn').click(autoSlidechange);
+  decreaseSlidetimerWidth()
+  //$('#ctrlBtn').click(autoSlidechange);
 })
 
+// I show a timer for each displayed slide
+
+
+function decreaseSlidetimerWidth(){
+  let slidetimer_w = $('#slidetimer').css('width');
+  slideTimerControl = setInterval(setSlideTimerWidth,10);
+  function setSlideTimerWidth(){
+    if (slidetimer_w == $(window).width()) {
+      clearInterval(slideTimerControl)
+    } else {
+      slidetimer_w++;
+      $('#slidetimer').css('width',slidetimer_w);
+    }
+  }
+}

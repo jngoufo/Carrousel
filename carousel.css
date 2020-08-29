@@ -18,3 +18,8 @@ a.bullet {
 	top: 0em;
 	opacity: .2;
 }
+#slidetimer {
+	background-color: greenyellow;
+    height: 5px;
+    width: 0%;
+}
