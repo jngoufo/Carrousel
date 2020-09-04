@@ -1,4 +1,4 @@
-let collection = $('#collection img'), slide = $('#slide'), defaultImg = $('#defaultImg'),defaultImgsrc = $('#defaultImg').attr('src'), playSlide,
+let collection = $('#collection img'), slide = $('#slide'), defaultImg = $('#defaultImg'),defaultImgsrc = $('#defaultImg').attr('src'), autoScroll,
 timer, collectionImg = [], imgBullet = [], timerWidth = undefined; 
 
   // I set a timer for each displayed slide      
@@ -18,53 +18,56 @@ timer, collectionImg = [], imgBullet = [], timerWidth = undefined;
 $(document).ready(function(){
   $('#ctrlBtn').hide();
 
-  function decreaseSlideTimer(){
-    $('#slidetimer').css('width',$(window).width());
+  function decreaseSlideTimer(widthOfTimer){
+    $('#slidetimer').css('width',widthOfTimer);
     timerWidth = parseFloat($('#slidetimer').css('width')) ;
     if(timerWidth === 0){
       clearInterval(timer)
     } 
     else {
       timer = setInterval(function(){
-        timerWidth = timerWidth-($(window).width()*0.01);
+        timerWidth = timerWidth-(widthOfTimer*0.01);
         $('#slidetimer').css('width',timerWidth);
       }, 50)
     }
   }
 
-  function controlSlideChange() { // a signal showing the user that there is some sort of control on the slide moves 
+  function stopAutoScroll() { // a signal showing the user that there is some sort of control on the slide moves 
+    let getwidthOfTimer;
+    $('.slideimg').mouseenter(function(){
+      $('.slideimg').css('cursor','url("https://res.cloudinary.com/monwebmestre/image/upload/v1599222243/Projets/Carrousel/Pause_Normal_Red.png"), auto');
+      clearInterval(autoScroll);
+      clearInterval(timer);
+      getwidthOfTimer = parseFloat($('#slidetimer').css('width'));
+    });
     $('.slideimg').mouseleave(function(){
     $('.slideimg').css('cursor','default');
-    playSlide = setInterval(autoSlideChange,5000);
-  });  
-    $('.slideimg').mouseenter(function(){
-      $('.slideimg').css('cursor','pointer');
-      clearInterval(playSlide);
-    });
+    autoScroll = setInterval(autoScrollSlides,5000);
+    decreaseSlideTimer(getwidthOfTimer);
+    });  
   }
 
   function createBullet(){
     $('#slidebullets').append('<a class="bullet">&#9632;</a>');
   }
 
-  // I set the mechanism to move to the next slide
-  let s = 0; // i = index of active slide
-  let n = 0;
-  function autoSlideChange() {
+  // I set the mechanism to move from slide to slide
+  let s = 0; // => index of active slide
+  let n = 0; // => index of previous slide
+  function autoScrollSlides() {
     clearInterval(timer);
-    if (s < (collectionImg.length-1)) { // every time the user clicks on next button, until she displays the slide before the last(3rd/4)...
-      s = s + 1; // show the slide that follows the current one (increase)
-    } else if (s === (collectionImg.length-1)) { // if the user displays the last slide (4th)... 
-      s = 0;// show the fisrt slide (reset)
+    if (s < (collectionImg.length-1)) { 
+      s = s + 1; 
+    } else if (s === (collectionImg.length-1)) { 
+      s = 0;
     } 
     $('.slideImgContainer').html(collectionImg[s]);
     $('.slideImgContainer img').addClass('slideimg');
-    imgBullet[n].css({'opacity':'.2','background-color':'none'}); // Make the font of the previous slide bullet back to normal
-    imgBullet[s].css({'opacity':'1','background-color':'#fff'}); // Change the current slide bullet to match the position of the slide displayed, then set the font
+    imgBullet[n].css({'opacity':'.2','background-color':'none'}); 
+    imgBullet[s].css({'opacity':'1','background-color':'#fff'}); 
     n = s;    
-    decreaseSlideTimer();
-
-    controlSlideChange();
+    decreaseSlideTimer($(window).width());
+    stopAutoScroll();
   }
 
 
@@ -74,16 +77,20 @@ $(document).ready(function(){
       createBullet();
       imgBullet.push($('.bullet'));
     }
-    // I set the default active slide
+    // I set the default active slide...
     $('.slideImgContainer').html(collectionImg[0]);
     imgBullet[0].css({'opacity':'1','background-color':'#fff'});
     $('.slideImgContainer img').addClass('slideimg');
-    decreaseSlideTimer();
+    decreaseSlideTimer($(window).width());
 
-    playSlide = setInterval(autoSlideChange,5000);
+    // The user can let the slides sroll automatically
+    autoScroll = setInterval(autoScrollSlides,5000);
+
+    //Or control the slide change...
+    stopAutoScroll();
+    $('.slideImgContainer').click(autoScrollSlides);
 
 
-    $('.slideImgContainer').click(autoSlideChange);
-    //controlSlideChange();
+    
 
 })
