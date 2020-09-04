@@ -18,8 +18,12 @@ a.bullet {
 	top: 0em;
 	opacity: .2;
 }
+.slideImgContainer.row {
+    margin-top: 5px;
+}
 #slidetimer {
-	background-color: greenyellow;
+	background-color: red;
     height: 5px;
-    width: 0%;
+    position: absolute;
+    top: 0;
 }
