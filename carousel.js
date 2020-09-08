@@ -28,7 +28,7 @@ $(document).ready(function(){
       timer = setInterval(function(){
         timerWidth = timerWidth-(widthOfTimer*0.01);
         $('#slidetimer').css('width',timerWidth);
-      }, 50)
+      }, 60)
     }
   }
 
@@ -42,7 +42,7 @@ $(document).ready(function(){
     });
     $('.slideimg').mouseleave(function(){
     $('.slideimg').css('cursor','default');
-    autoScroll = setInterval(autoScrollSlides,5000);
+    autoScroll = setInterval(autoScrollSlides,6000);
     decreaseSlideTimer(getwidthOfTimer);
     });  
   }
@@ -50,6 +50,11 @@ $(document).ready(function(){
   function createBullet(){
     $('#slidebullets').append('<a class="bullet">&#9632;</a>');
   }
+
+  function slideAnimationAtStart(){
+    $('.slideImgContainer').css({'height':'0','width':'0'})
+    $('.slideImgContainer').animate({height:'+=100%', width:'+=100%'},1000);
+}
 
   // I set the mechanism to move from slide to slide
   let s = 0; // => index of active slide
@@ -62,6 +67,7 @@ $(document).ready(function(){
       s = 0;
     } 
     $('.slideImgContainer').html(collectionImg[s]);
+    slideAnimationAtStart();
     $('.slideImgContainer img').addClass('slideimg');
     imgBullet[n].css({'opacity':'.2','background-color':'none'}); 
     imgBullet[s].css({'opacity':'1','background-color':'#fff'}); 
@@ -79,12 +85,13 @@ $(document).ready(function(){
     }
     // I set the default active slide...
     $('.slideImgContainer').html(collectionImg[0]);
+    slideAnimationAtStart();
     imgBullet[0].css({'opacity':'1','background-color':'#fff'});
     $('.slideImgContainer img').addClass('slideimg');
     decreaseSlideTimer($(window).width());
 
     // The user can let the slides sroll automatically
-    autoScroll = setInterval(autoScrollSlides,5000);
+    autoScroll = setInterval(autoScrollSlides,6000);
 
     //Or control the slide change...
     stopAutoScroll();

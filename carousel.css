@@ -1,12 +1,12 @@
 #collection {
     display: none;
 }
-img.slideimg {
+.slideimg {
     margin: 0 auto;
 }
 a.bullet {
-    bottom: 2em;
     position: relative;
+    bottom: 2em;
     left: 50%;
     margin: 0 auto;
     opacity: 0.2;
@@ -19,11 +19,11 @@ a.bullet {
 	opacity: .2;
 }
 .slideImgContainer.row {
-    margin-top: 5px;
+    margin: 0 auto;
 }
 #slidetimer {
+    position: absolute;
 	background-color: red;
     height: 5px;
-    position: absolute;
     top: 0;
 }
