@@ -1,22 +1,8 @@
-let collection = $('#collection img'), slide = $('#slide'), defaultImg = $('#defaultImg'),defaultImgsrc = $('#defaultImg').attr('src'), autoScroll,
-timer, collectionImg = [], imgBullet = [], timerWidth = undefined; 
-
-  // I set a timer for each displayed slide      
-  /*function decreaseSlideTimer(){
-    timerWidth = $('#slidetimer').css('width');
-    timerWidth = parseFloat(timerWidth);
-    if(timerWidth === 0){
-      timerWidth = $(window).width()
-    } else {
-      timerWidth = timerWidth-($(window).width()*0.01);
-    }
-    $('#slidetimer').css('width',timerWidth);
-  }*/
-
+let slide = $('#slide'), defaultImg = $('#defaultImg'),defaultImgsrc = $('#defaultImg').attr('src'), autoScroll,
+timer, imgArray = [], imgBullet = [], timerWidth = undefined, captionTransformation; 
 
 
 $(document).ready(function(){
-  $('#ctrlBtn').hide();
 
   function decreaseSlideTimer(widthOfTimer){
     $('#slidetimer').css('width',widthOfTimer);
@@ -35,14 +21,14 @@ $(document).ready(function(){
   function stopAutoScroll() { // a signal showing the user that there is some sort of control on the slide moves 
     let getwidthOfTimer;
     $('.slideimg').mouseenter(function(){
-      $('.slideimg').css('cursor','url("https://res.cloudinary.com/monwebmestre/image/upload/v1599222243/Projets/Carrousel/Pause_Normal_Red.png"), auto');
+      $('.slideimg').css('cursor','url("https://res.cloudinary.com/monwebmestre/image/upload/v1599653657/Projets/Carrousel/Pause_Play_button.png"), auto');
       clearInterval(autoScroll);
       clearInterval(timer);
       getwidthOfTimer = parseFloat($('#slidetimer').css('width'));
     });
     $('.slideimg').mouseleave(function(){
     $('.slideimg').css('cursor','default');
-    autoScroll = setInterval(autoScrollSlides,6000);
+    autoScroll = setInterval(autoScrollSlides,7000);
     decreaseSlideTimer(getwidthOfTimer);
     });  
   }
@@ -51,22 +37,71 @@ $(document).ready(function(){
     $('#slidebullets').append('<a class="bullet">&#9632;</a>');
   }
 
+  function setSkew (x,y){
+    let skewValue ='';
+    skewValue = 'skew(' + x + 'deg,' + y + 'deg)';
+    return skewValue
+  }
+  function skewTransform(a,b){
+    captionTransformation = setInterval(function(){
+      a += 10; b += 10;
+      if (a >= 180 && b >= 180){
+        $('figcaption').css('transform', setSkew(180,180));
+        clearInterval(captionTransformation)
+      } 
+      else {
+        $('figcaption').css('transform', setSkew(a,b));
+      }
+    },111)
+  }
+
+  function showFigcaption(){
+    $('figcaption').animate({width:'80%'},250)
+    .animate({fontSize:'50px'},250);
+    skewTransform(90, 90)    
+  }
+
+  function setTranslate(c,d){
+    let translateValue = '';
+    translateValue = 'translate('+c+'%,'+d+'%)'
+    return translateValue;
+  }
+  function hideFigcaption(e,f,w,fs){
+    captionTransformation = setInterval(function(){
+      e += 1; f -= 1; 
+      w = parseFloat($('figcaption').css('width')) - (parseFloat($('figcaption').css('width'))*0.01);
+      fs = parseFloat($('figcaption').css('fontSize')) - (parseFloat($('figcaption').css('fontSize'))*0.01);
+      if ((e >= 100 && f <= -100) || (w <= 0) || (fs <= 0)){
+        $('figcaption').css({'transform': setTranslate(100,-100),'width':'0','fontSize':'0'});
+        clearInterval(captionTransformation);
+      } else {
+        $('figcaption').css({'transform': setTranslate(e,f),'width':w,'fontSize':fs});
+      }
+    },10)
+  }
+
   function slideAnimationAtStart(){
     $('.slideImgContainer').css({'height':'0','width':'0'})
-    $('.slideImgContainer').animate({height:'+=100%', width:'+=100%'},1000);
-}
+    .animate({height:'100%', width:'100%'}, 1000, showFigcaption());
+    $('.slideImgContainer')
+  }
+
+  function slideAnimationAtEnd(){
+    hideFigcaption(0,0,parseFloat($('figcaption').css('width')),parseFloat($('figcaption').css('fontSize')))
+    $('.slideImgContainer').animate({height:'0', width:'0'},500)
+  }
 
   // I set the mechanism to move from slide to slide
   let s = 0; // => index of active slide
   let n = 0; // => index of previous slide
   function autoScrollSlides() {
     clearInterval(timer);
-    if (s < (collectionImg.length-1)) { 
+    if (s < (imgArray.length-1)) { 
       s = s + 1; 
-    } else if (s === (collectionImg.length-1)) { 
+    } else if (s === (imgArray.length-1)) { 
       s = 0;
     } 
-    $('.slideImgContainer').html(collectionImg[s]);
+    $('.slideImgContainer').html(imgArray[s]);
     slideAnimationAtStart();
     $('.slideImgContainer img').addClass('slideimg');
     imgBullet[n].css({'opacity':'.2','background-color':'none'}); 
@@ -78,24 +113,27 @@ $(document).ready(function(){
 
 
     // I collect the slides in an array and I create slide bullets
-    for(let c=0; c < collection.length; c++) {
-      collectionImg.push(collection[c]);
+    for(let c=0; c < $('figure').length; c++) {
+      imgArray.push($('figure')[c]);
       createBullet();
       imgBullet.push($('.bullet'));
     }
     // I set the default active slide...
-    $('.slideImgContainer').html(collectionImg[0]);
+    $('.slideImgContainer').html(imgArray[0]);
     slideAnimationAtStart();
     imgBullet[0].css({'opacity':'1','background-color':'#fff'});
     $('.slideImgContainer img').addClass('slideimg');
     decreaseSlideTimer($(window).width());
 
     // The user can let the slides sroll automatically
-    autoScroll = setInterval(autoScrollSlides,6000);
+    autoScroll = setInterval(autoScrollSlides,7000);
 
     //Or control the slide change...
     stopAutoScroll();
     $('.slideImgContainer').click(autoScrollSlides);
+    $('#playpausebutton').click(autoScrollSlides);
+    
+
 
 
     
