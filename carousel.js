@@ -1,34 +1,22 @@
-let slide = $('#slide'), defaultImg = $('#defaultImg'),defaultImgsrc = $('#defaultImg').attr('src'), autoScroll,
-timer, imgArray = [], imgBullet = [], timerWidth = undefined, captionTransformation; 
+let slide = $('#slide'), defaultImg = $('#defaultImg'),defaultImgsrc = $('#defaultImg').attr('src'), autoScroll, endSlide, timer, imgArray = [],
+ imgBullet = [], timerWidth = undefined, captionTransformation; 
 
 
 $(document).ready(function(){
 
-  function decreaseSlideTimer(widthOfTimer){
-    $('#slidetimer').css('width',widthOfTimer);
-    timerWidth = parseFloat($('#slidetimer').css('width')) ;
-    if(timerWidth === 0){
-      clearInterval(timer)
-    } 
-    else {
-      timer = setInterval(function(){
-        timerWidth = timerWidth-(widthOfTimer*0.01);
-        $('#slidetimer').css('width',timerWidth);
-      }, 60)
-    }
-  }
-
-  function stopAutoScroll() { // a signal showing the user that there is some sort of control on the slide moves 
+  function stopAutoScroll() { // a signal showing the user that there is some sort of control over the slide moves 
     let getwidthOfTimer;
     $('.slideimg').mouseenter(function(){
       $('.slideimg').css('cursor','url("https://res.cloudinary.com/monwebmestre/image/upload/v1599653657/Projets/Carrousel/Pause_Play_button.png"), auto');
       clearInterval(autoScroll);
       clearInterval(timer);
+      clearTimeout(endSlide);
       getwidthOfTimer = parseFloat($('#slidetimer').css('width'));
     });
     $('.slideimg').mouseleave(function(){
     $('.slideimg').css('cursor','default');
-    autoScroll = setInterval(autoScrollSlides,7000);
+    endSlide = setTimeout(slideAnimationAtEnd,5000);
+    autoScroll = setInterval(changeSlide,6000);
     decreaseSlideTimer(getwidthOfTimer);
     });  
   }
@@ -68,7 +56,7 @@ $(document).ready(function(){
   }
   function hideFigcaption(e,f,w,fs){
     captionTransformation = setInterval(function(){
-      e += 1; f -= 1; 
+      e += 10; f -= 10; 
       w = parseFloat($('figcaption').css('width')) - (parseFloat($('figcaption').css('width'))*0.01);
       fs = parseFloat($('figcaption').css('fontSize')) - (parseFloat($('figcaption').css('fontSize'))*0.01);
       if ((e >= 100 && f <= -100) || (w <= 0) || (fs <= 0)){
@@ -77,18 +65,38 @@ $(document).ready(function(){
       } else {
         $('figcaption').css({'transform': setTranslate(e,f),'width':w,'fontSize':fs});
       }
-    },10)
+    },50)
   }
 
   function slideAnimationAtStart(){
     $('.slideImgContainer').css({'height':'0','width':'0'})
     .animate({height:'100%', width:'100%'}, 1000, showFigcaption());
-    $('.slideImgContainer')
+  }
+
+  function decreaseSlideTimer(widthOfTimer){
+    $('#slidetimer').css('width',widthOfTimer);
+    timerWidth = parseFloat($('#slidetimer').css('width')) ;
+    if(timerWidth === 0){
+      clearInterval(timer);
+    } 
+    else {
+      timer = setInterval(function(){
+        timerWidth = timerWidth-(widthOfTimer*0.01);
+        $('#slidetimer').css('width',timerWidth);
+      }, 50)
+    }
   }
 
   function slideAnimationAtEnd(){
-    hideFigcaption(0,0,parseFloat($('figcaption').css('width')),parseFloat($('figcaption').css('fontSize')))
-    $('.slideImgContainer').animate({height:'0', width:'0'},500)
+    hideFigcaption(0,0,$('figcaption').css('width'),$('figcaption').css('fontSize'));
+    //settimeout(function(){
+      $('.slideImgContainer').animate({height:'0', width:'0'},1000);
+    //},500)
+  }
+
+  function changeSlide(){
+    autoScrollSlides()
+    endSlide = setTimeout(slideAnimationAtEnd,5000)
   }
 
   // I set the mechanism to move from slide to slide
@@ -124,14 +132,15 @@ $(document).ready(function(){
     imgBullet[0].css({'opacity':'1','background-color':'#fff'});
     $('.slideImgContainer img').addClass('slideimg');
     decreaseSlideTimer($(window).width());
+    endSlide = setTimeout(slideAnimationAtEnd,5000);
 
     // The user can let the slides sroll automatically
-    autoScroll = setInterval(autoScrollSlides,7000);
+    autoScroll = setInterval(changeSlide,6000);
 
     //Or control the slide change...
     stopAutoScroll();
-    $('.slideImgContainer').click(autoScrollSlides);
-    $('#playpausebutton').click(autoScrollSlides);
+    $('.slideImgContainer').click(changeSlide);
+    $('#playpausebutton').click(changeSlide);
     
 
 

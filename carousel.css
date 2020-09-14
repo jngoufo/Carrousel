@@ -20,8 +20,11 @@ figure {
 	left: 98%;
 	top: 0em;
 }
-.slideImgContainer.row, .slideimg {
+.slideimg {
     margin: 0 auto;
+}
+.slideImgContainer.row {
+	margin: 5px 0 0;
 }
 #slidetimer {
     position: absolute;
