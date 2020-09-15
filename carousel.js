@@ -16,7 +16,7 @@ $(document).ready(function(){
     $('.slideimg').mouseleave(function(){
     $('.slideimg').css('cursor','default');
     endSlide = setTimeout(slideAnimationAtEnd,5000);
-    autoScroll = setInterval(changeSlide,6000);
+    autoScroll = setInterval(autoChangeSlide,6000);
     decreaseSlideTimer(getwidthOfTimer);
     });  
   }
@@ -59,10 +59,12 @@ $(document).ready(function(){
       e += 10; f -= 10; 
       w = parseFloat($('figcaption').css('width')) - (parseFloat($('figcaption').css('width'))*0.01);
       fs = parseFloat($('figcaption').css('fontSize')) - (parseFloat($('figcaption').css('fontSize'))*0.01);
-      if ((e >= 100 && f <= -100) || (w <= 0) || (fs <= 0)){
-        $('figcaption').css({'transform': setTranslate(100,-100),'width':'0','fontSize':'0'});
+      if ((e > 100 && f < -100) /*|| (w <= 0) || (fs <= 0)*/){
         clearInterval(captionTransformation);
-      } else {
+      } else if(e===100 && f===-100){
+        $('figcaption').css({'transform': setTranslate(100,-100),'width':'0','fontSize':'0'});
+      }
+      else {
         $('figcaption').css({'transform': setTranslate(e,f),'width':w,'fontSize':fs});
       }
     },50)
@@ -89,14 +91,23 @@ $(document).ready(function(){
 
   function slideAnimationAtEnd(){
     hideFigcaption(0,0,$('figcaption').css('width'),$('figcaption').css('fontSize'));
-    //settimeout(function(){
-      $('.slideImgContainer').animate({height:'0', width:'0'},1000);
-    //},500)
+    $('.slideImgContainer').animate({height:'0', width:'0'},1000);
   }
 
-  function changeSlide(){
-    autoScrollSlides()
-    endSlide = setTimeout(slideAnimationAtEnd,5000)
+  function autoChangeSlide(){
+    autoScrollSlides();
+    endSlide = setTimeout(slideAnimationAtEnd,5000);
+  }
+
+  function ManualChangeSlide(){
+    hideFigcaption(0,0,$('figcaption').css('width'),$('figcaption').css('fontSize'));
+    $('.slideImgContainer').animate({height:'0', width:'0'},
+      {
+        duration: 700,
+        easing:'linear',
+        complete: autoScrollSlides
+      }
+    );
   }
 
   // I set the mechanism to move from slide to slide
@@ -135,12 +146,12 @@ $(document).ready(function(){
     endSlide = setTimeout(slideAnimationAtEnd,5000);
 
     // The user can let the slides sroll automatically
-    autoScroll = setInterval(changeSlide,6000);
+    autoScroll = setInterval(autoChangeSlide,6000);
 
     //Or control the slide change...
     stopAutoScroll();
-    $('.slideImgContainer').click(changeSlide);
-    $('#playpausebutton').click(changeSlide);
+    $('.slideImgContainer.row').click(ManualChangeSlide);
+    $('#playpausebutton').click(ManualChangeSlide);
     
 
 
