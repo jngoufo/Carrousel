@@ -1,30 +1,34 @@
 let slide = $('#slide'), defaultImg = $('#defaultImg'),defaultImgsrc = $('#defaultImg').attr('src'), autoScroll, endSlide, timer, imgArray = [],
- imgBullet = [], timerWidth = undefined, captionTransformation; 
+ imgBullet = [], timerWidth = undefined, getwidthOfTimer, captionTransformation; 
 
 
 $(document).ready(function(){
-
-  function stopAutoScroll() { // a signal showing the user that there is some sort of control over the slide moves 
-    let getwidthOfTimer;
-    $('.slideimg').mouseenter(function(){
-      $('.slideimg').css('cursor','url("https://res.cloudinary.com/monwebmestre/image/upload/v1599653657/Projets/Carrousel/Pause_Play_button.png"), auto');
-      clearInterval(autoScroll);
-      clearInterval(timer);
-      clearTimeout(endSlide);
-      getwidthOfTimer = parseFloat($('#slidetimer').css('width'));
-    });
-    $('.slideimg').mouseleave(function(){
-    $('.slideimg').css('cursor','default');
-    endSlide = setTimeout(slideAnimationAtEnd,5000);
-    autoScroll = setInterval(autoChangeSlide,6000);
-    decreaseSlideTimer(getwidthOfTimer);
-    });  
-  }
 
   function createBullet(){
     $('.slidebullets').append('<a class="bullet">&#9632;</a>');
   }
 
+  // I set the mechanism to move from slide to slide
+  let s = 0; // => index of active slide
+  let n = 0; // => index of previous slide
+  function autoScrollSlides() {
+    clearInterval(timer);
+    if (s < (imgArray.length-1)) { 
+      s = s + 1; 
+    } else if (s === (imgArray.length-1)) { 
+      s = 0;
+    } 
+    $('.slideImgContainer').html(imgArray[s]);
+    slideAnimationAtStart();
+    $('.slideImgContainer img').addClass('slideimg');
+    imgBullet[n].css({'opacity':'.5','background-color':'none','color':'#fff'}); 
+    imgBullet[s].css({'opacity':'1','background-color':'#000','color':'#fff'}); 
+    n = s;    
+    decreaseSlideTimer($(window).width());
+    pauseAutoScroll();
+  }
+  
+  //Let transform the caption every 111ms to use it later in animations
   function setSkew (x,y){
     let skewValue ='';
     skewValue = 'skew(' + x + 'deg,' + y + 'deg)';
@@ -42,13 +46,6 @@ $(document).ready(function(){
       }
     },111)
   }
-
-  function showFigcaption(){
-    $('figcaption').animate({width:'80%'},250)
-    .animate({fontSize:'50px'},250);
-    skewTransform(90, 90)    
-  }
-
   function setTranslate(c,d){
     let translateValue = '';
     translateValue = 'translate('+c+'%,'+d+'%)'
@@ -69,30 +66,22 @@ $(document).ready(function(){
       }
     },50)
   }
+  function showFigcaption(){
+    $('figcaption').animate({width:'80%'},250)
+    .animate({fontSize:'50px'},250);
+    skewTransform(90, 90)    
+  }
 
+  //Let's use the functions above to create the animations
   function slideAnimationAtStart(){
     $('.slideImgContainer').css({'height':'0','width':'0'})
     .animate({height:'100%', width:'100%'}, 1000, showFigcaption());
   }
-
-  function decreaseSlideTimer(widthOfTimer){
-    $('#slidetimer').css('width',widthOfTimer);
-    timerWidth = parseFloat($('#slidetimer').css('width')) ;
-    if(timerWidth === 0){
-      clearInterval(timer);
-    } 
-    else {
-      timer = setInterval(function(){
-        timerWidth = timerWidth-(widthOfTimer*0.01);
-        $('#slidetimer').css('width',timerWidth);
-      }, 50)
-    }
-  }
-
   function slideAnimationAtEnd(){
     $('.slideImgContainer').animate({height:'0', width:'0'},1000);
   }
 
+  //The slides change either automatically or manually
   function autoChangeSlide(){
     autoScrollSlides();
     endSlide = setTimeout(slideAnimationAtEnd,5000);
@@ -108,52 +97,60 @@ $(document).ready(function(){
     );
   }
 
-  // I set the mechanism to move from slide to slide
-  let s = 0; // => index of active slide
-  let n = 0; // => index of previous slide
-  function autoScrollSlides() {
-    clearInterval(timer);
-    if (s < (imgArray.length-1)) { 
-      s = s + 1; 
-    } else if (s === (imgArray.length-1)) { 
-      s = 0;
+  //Let's create a timer in the form of a bar
+  function decreaseSlideTimer(widthOfTimer){
+    $('#slidetimer').css('width',widthOfTimer);
+    timerWidth = parseFloat($('#slidetimer').css('width'));
+    if(timerWidth === 0){
+      clearInterval(timer);
     } 
-    $('.slideImgContainer').html(imgArray[s]);
-    slideAnimationAtStart();
-    $('.slideImgContainer img').addClass('slideimg');
-    imgBullet[n].css({'opacity':'.5','background-color':'none','color':'#fff'}); 
-    imgBullet[s].css({'opacity':'1','background-color':'#000','color':'#fff'}); 
-    n = s;    
-    decreaseSlideTimer($(window).width());
-    stopAutoScroll();
+    else {
+      timer = setInterval(function(){
+        timerWidth = timerWidth-(widthOfTimer*0.01);
+        $('#slidetimer').css('width',timerWidth);
+      }, 45)
+    }
   }
 
 
-    // I collect the slides in an array and I create slide bullets
-    for(let c=0; c < $('figure').length; c++) {
-      imgArray.push($('figure')[c]);
-      createBullet();
-      imgBullet.push($('.bullet'));
-    }
-    // I set the default active slide...
-    $('.slideImgContainer').html(imgArray[0]);
-    slideAnimationAtStart();
-    imgBullet[0].css({'opacity':'1','background-color':'#fff'});
-    $('.slideImgContainer img').addClass('slideimg');
-    decreaseSlideTimer($(window).width());
+  // Let the user pause the slide moves 
+  function pauseAutoScroll() { 
+    $('.slideimg').mouseenter(function(){
+      $('.slideimg').css('cursor','url("https://res.cloudinary.com/monwebmestre/image/upload/v1599653657/Projets/Carrousel/Pause_Play_button.png"), auto');
+      clearInterval(autoScroll);
+      clearInterval(timer);
+      clearTimeout(endSlide);
+      getwidthOfTimer = parseFloat($('#slidetimer').css('width'));
+    });
+    $('.slideimg').mouseleave(function(){
+    $('.slideimg').css('cursor','default');
     endSlide = setTimeout(slideAnimationAtEnd,5000);
-
-    // The user can let the slides sroll automatically
     autoScroll = setInterval(autoChangeSlide,6000);
+    decreaseSlideTimer(getwidthOfTimer);
+    });  
+  }
 
-    //Or control the slide change...
-    stopAutoScroll();
-    $('.slideImgContainer.row').click(ManualChangeSlide);
-    $('#playpausebutton').click(ManualChangeSlide);
-    
+  // I collect the slides in an array and I create slide bullets
+  for(let c=0; c < $('figure').length; c++) {
+    imgArray.push($('figure')[c]);
+    createBullet();
+    imgBullet.push($('.bullet'));
+  }
+  
+  // I set the default active slide...
+  $('.slideImgContainer').html(imgArray[0]);
+  slideAnimationAtStart();
+  imgBullet[0].css({'opacity':'1','background-color':'#fff'});
+  $('.slideImgContainer img').addClass('slideimg');
+  decreaseSlideTimer($(window).width());
+  endSlide = setTimeout(slideAnimationAtEnd,5000);
 
+  // The user can let the slides sroll automatically...
+  autoScroll = setInterval(autoChangeSlide,6000);
 
-
-    
+  //Or control the slide change
+  pauseAutoScroll();
+  $('.slideImgContainer.row').click(ManualChangeSlide);
+  $('#playpausebutton').click(ManualChangeSlide);
 
 })
