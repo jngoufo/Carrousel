@@ -22,7 +22,7 @@ $(document).ready(function(){
   }
 
   function createBullet(){
-    $('#slidebullets').append('<a class="bullet">&#9632;</a>');
+    $('.slidebullets').append('<a class="bullet">&#9632;</a>');
   }
 
   function setSkew (x,y){
@@ -90,7 +90,6 @@ $(document).ready(function(){
   }
 
   function slideAnimationAtEnd(){
-    hideFigcaption(0,0,$('figcaption').css('width'),$('figcaption').css('fontSize'));
     $('.slideImgContainer').animate({height:'0', width:'0'},1000);
   }
 
@@ -100,7 +99,6 @@ $(document).ready(function(){
   }
 
   function ManualChangeSlide(){
-    hideFigcaption(0,0,$('figcaption').css('width'),$('figcaption').css('fontSize'));
     $('.slideImgContainer').animate({height:'0', width:'0'},
       {
         duration: 700,
@@ -123,8 +121,8 @@ $(document).ready(function(){
     $('.slideImgContainer').html(imgArray[s]);
     slideAnimationAtStart();
     $('.slideImgContainer img').addClass('slideimg');
-    imgBullet[n].css({'opacity':'.2','background-color':'none'}); 
-    imgBullet[s].css({'opacity':'1','background-color':'#fff'}); 
+    imgBullet[n].css({'opacity':'.5','background-color':'none','color':'#fff'}); 
+    imgBullet[s].css({'opacity':'1','background-color':'#000','color':'#fff'}); 
     n = s;    
     decreaseSlideTimer($(window).width());
     stopAutoScroll();
