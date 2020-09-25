@@ -18,12 +18,12 @@ $(document).ready(function(){
     } else if (s === (imgArray.length-1)) { 
       s = 0;
     } 
-    $('.slideImgContainer').html(imgArray[s]);
-    slideAnimationAtStart();
-    $('.slideImgContainer img').addClass('slideimg');
+    
+    $('.slideImgContainer img').addClass('slideimg');$('.slideImgContainer').html(imgArray[s]);
     imgBullet[n].css({'opacity':'.5','background-color':'none','color':'#fff'}); 
     imgBullet[s].css({'opacity':'1','background-color':'#000','color':'#fff'}); 
     n = s;    
+    slideAnimationAtStart();
     decreaseSlideTimer($(window).width());
     pauseAutoScroll();
   }
@@ -74,11 +74,58 @@ $(document).ready(function(){
 
   //Let's use the functions above to create the animations
   function slideAnimationAtStart(){
-    $('.slideImgContainer').css({'height':'0','width':'0'})
-    .animate({height:'100%', width:'100%'}, 1000, showFigcaption());
+    /*$('.slideImgContainer').css({'height':'0','width':'100%'})
+    .animate({height:'100%', width:'100%'}, 1000, showFigcaption());*/
+    /*if($('.slideimg').attr('src')=='https://res.cloudinary.com/monwebmestre/image/upload/v1600250959/Projets/Carrousel/Justin-Jr-WebDev-min-min.jpg'){
+      $('figure').show('clip', {direction:'vertical'},500);
+    }else if($('.slideimg').attr('src')=='https://res.cloudinary.com/monwebmestre/image/upload/v1600250960/Projets/Carrousel/Carousel-coded-with-jQuery-min.jpg'){
+      $('figure').show('explode',{pieces:16},500);
+    }else if($('.slideimg').attr('src')=='https://res.cloudinary.com/monwebmestre/image/upload/v1600250956/Projets/Carrousel/Justin-WebDev-skills_web-format-min.jpg'){
+      $('figure').show('fold',{horizFirst:true},500);
+    }else if($('.slideimg').attr('src')=='https://res.cloudinary.com/monwebmestre/image/upload/v1600250957/Projets/Carrousel/Appeller-developpeur-site-web-simple-min.jpg'){
+      $('figure').show('drop',{direction:'up'},500);
+    }else{
+      $('figure').fadeIn(500,showFigcaption());
+    };*/
+    switch($('.slideimg').attr('src')){
+      case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250959/Projets/Carrousel/Justin-Jr-WebDev-min-min.jpg':
+        $('figure').show('clip', {direction:'vertical'},1000); //image 0 comes with clip effect
+        break;
+      case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250960/Projets/Carrousel/Carousel-coded-with-jQuery-min.jpg':
+        $('figure').show('explode',{pieces:16},1000); //image 1 comes with explode effect
+        break;
+      case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250956/Projets/Carrousel/Justin-WebDev-skills_web-format-min.jpg': 
+        $('figure').show('fold',{horizFirst:true},1000); //image 2 comes with fold effect
+        break;
+      case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250957/Projets/Carrousel/Appeller-developpeur-site-web-simple-min.jpg':
+        $('figure').show('drop',{direction:'down'},1000); //image 3 comes with drop effect
+        break;
+      default:
+        $('figure').fadeIn(500,showFigcaption())
+    }
   }
   function slideAnimationAtEnd(){
-    $('.slideImgContainer').animate({height:'0', width:'0'},1000);
+    //let i;
+    /*$('.slideImgContainer').animate({height:'0', width:'100%'},1000);*/
+    //$('.slideImgContainer').html()==setFigIndex(i);
+    switch($('.slideimg').attr('src')){
+      case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250957/Projets/Carrousel/Appeller-developpeur-site-web-simple-min.jpg':
+        $('figure').hide('clip', {direction:'vertical'},1000); // image 3 goes with clip effect
+        break;
+      case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250959/Projets/Carrousel/Justin-Jr-WebDev-min-min.jpg':
+        $('figure').hide('explode',{pieces:16},1000); // image 0 goes with explode effect
+        break;
+      case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250960/Projets/Carrousel/Carousel-coded-with-jQuery-min.jpg':
+        $('figure').hide('fold',{horizFirst:true},1000); // image 1 goes with fold effect
+        break;
+      case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250956/Projets/Carrousel/Justin-WebDev-skills_web-format-min.jpg':
+        $('figure').hide('drop',{direction:'down'},1000); // image 2 goes with drop effect
+        break;
+      default:
+        $('figure').fadeOut(1000)
+  
+    }
+
   }
 
   //The slides change either automatically or manually
@@ -88,7 +135,7 @@ $(document).ready(function(){
   }
 
   function ManualChangeSlide(){
-    $('.slideImgContainer').animate({height:'0', width:'0'},
+    $('.slideImgContainer').animate({height:'0', width:'100%'},
       {
         duration: 700,
         easing:'linear',
@@ -108,7 +155,7 @@ $(document).ready(function(){
       timer = setInterval(function(){
         timerWidth = timerWidth-(widthOfTimer*0.01);
         $('#slidetimer').css('width',timerWidth);
-      }, 45)
+      }, 50)
     }
   }
 
@@ -146,6 +193,9 @@ $(document).ready(function(){
   endSlide = setTimeout(slideAnimationAtEnd,5000);
 
   // The user can let the slides sroll automatically...
+
+
+
   autoScroll = setInterval(autoChangeSlide,6000);
 
   //Or control the slide change
