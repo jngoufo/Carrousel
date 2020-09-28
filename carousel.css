@@ -26,6 +26,9 @@ figure {
 	margin: 0 auto;
 	width: min-content;
 }
+.slideImgContainer.row figure {
+	margin-top: 5px;
+}
 #slidetimer {
     position: absolute;
 	background-color: red;
@@ -37,7 +40,8 @@ figcaption {
 	bottom: 8em;
 	margin: 0 auto;
 	background-color: rgb(238,238,238,0.8);
-	text-align: center;
+    text-align: center;
+    width: 80%; font-size: 50px;
 }
 /***********Tablets => most popular screens = 768 + 800 + 962*/
 @media only screen and (min-width:768px) and (max-width:1023px) { 

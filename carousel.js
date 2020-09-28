@@ -87,12 +87,12 @@ $(document).ready(function(){
     }else{
       $('figure').fadeIn(500,showFigcaption());
     };*/
-    switch($('.slideimg').attr('src')){
+    switch($('.slideImgContainer.row figure img').attr('src')){
       case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250959/Projets/Carrousel/Justin-Jr-WebDev-min-min.jpg':
         $('figure').show('clip', {direction:'vertical'},1000); //image 0 comes with clip effect
         break;
       case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250960/Projets/Carrousel/Carousel-coded-with-jQuery-min.jpg':
-        $('figure').show('explode',{pieces:16},1000); //image 1 comes with explode effect
+        $('figure').show('explode',{pieces:128},1000); //image 1 comes with explode effect
         break;
       case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250956/Projets/Carrousel/Justin-WebDev-skills_web-format-min.jpg': 
         $('figure').show('fold',{horizFirst:true},1000); //image 2 comes with fold effect
@@ -108,12 +108,12 @@ $(document).ready(function(){
     //let i;
     /*$('.slideImgContainer').animate({height:'0', width:'100%'},1000);*/
     //$('.slideImgContainer').html()==setFigIndex(i);
-    switch($('.slideimg').attr('src')){
+    switch($('.slideImgContainer.row figure img').attr('src')){
       case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250957/Projets/Carrousel/Appeller-developpeur-site-web-simple-min.jpg':
         $('figure').hide('clip', {direction:'vertical'},1000); // image 3 goes with clip effect
         break;
       case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250959/Projets/Carrousel/Justin-Jr-WebDev-min-min.jpg':
-        $('figure').hide('explode',{pieces:16},1000); // image 0 goes with explode effect
+        $('figure').hide('explode',{pieces:128},1000); // image 0 goes with explode effect
         break;
       case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250960/Projets/Carrousel/Carousel-coded-with-jQuery-min.jpg':
         $('figure').hide('fold',{horizFirst:true},1000); // image 1 goes with fold effect
@@ -135,13 +135,15 @@ $(document).ready(function(){
   }
 
   function ManualChangeSlide(){
-    $('.slideImgContainer').animate({height:'0', width:'100%'},
+    /*$('.slideImgContainer').animate({height:'0', width:'100%'},
       {
         duration: 700,
         easing:'linear',
         complete: autoScrollSlides
       }
-    );
+    );*/
+    slideAnimationAtEnd();
+    autoScrollSlides();
   }
 
   //Let's create a timer in the form of a bar
@@ -162,15 +164,15 @@ $(document).ready(function(){
 
   // Let the user pause the slide moves 
   function pauseAutoScroll() { 
-    $('.slideimg').mouseenter(function(){
-      $('.slideimg').css('cursor','url("https://res.cloudinary.com/monwebmestre/image/upload/v1599653657/Projets/Carrousel/Pause_Play_button.png"), auto');
+    $('.slideImgContainer.row figure').mouseenter(function(){
+      $('.slideImgContainer.row figure').css('cursor','url("https://res.cloudinary.com/monwebmestre/image/upload/v1599653657/Projets/Carrousel/Pause_Play_button.png"), auto');
       clearInterval(autoScroll);
       clearInterval(timer);
       clearTimeout(endSlide);
       getwidthOfTimer = parseFloat($('#slidetimer').css('width'));
     });
-    $('.slideimg').mouseleave(function(){
-    $('.slideimg').css('cursor','default');
+    $('.slideImgContainer.row figure').mouseleave(function(){
+    $('.slideImgContainer.row figure').css('cursor','default');
     endSlide = setTimeout(slideAnimationAtEnd,5000);
     autoScroll = setInterval(autoChangeSlide,6000);
     decreaseSlideTimer(getwidthOfTimer);
@@ -201,6 +203,6 @@ $(document).ready(function(){
   //Or control the slide change
   pauseAutoScroll();
   $('.slideImgContainer.row').click(ManualChangeSlide);
-  $('#playpausebutton').click(ManualChangeSlide);
+  //$('#playpausebutton').click(ManualChangeSlide);
 
 })
