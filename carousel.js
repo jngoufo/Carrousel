@@ -134,7 +134,7 @@ $(document).ready(function(){
     endSlide = setTimeout(slideAnimationAtEnd,5000);
   }
 
-  function ManualChangeSlide(){
+  function manualChangeSlide(){
     /*$('.slideImgContainer').animate({height:'0', width:'100%'},
       {
         duration: 700,
@@ -202,7 +202,9 @@ $(document).ready(function(){
 
   //Or control the slide change
   pauseAutoScroll();
-  $('.slideImgContainer.row').click(ManualChangeSlide);
-  //$('#playpausebutton').click(ManualChangeSlide);
+  $('.slideImgContainer.row').click(manualChangeSlide);
+  //$('#playpausebutton').click(manualChangeSlide);
+  $('.slideImgContainer.row').on('tap',manualChangeSlide);
+  $('.slideImgContainer.row').on('swipe',manualChangeSlide)
 
 })
