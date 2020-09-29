@@ -92,7 +92,7 @@ $(document).ready(function(){
         $('figure').show('clip', {direction:'vertical'},1000); //image 0 comes with clip effect
         break;
       case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250960/Projets/Carrousel/Carousel-coded-with-jQuery-min.jpg':
-        $('figure').show('explode',{pieces:128},1000); //image 1 comes with explode effect
+        $('figure').show("puff", {percent:5},1000); //image 1 comes with explode effect
         break;
       case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250956/Projets/Carrousel/Justin-WebDev-skills_web-format-min.jpg': 
         $('figure').show('fold',{horizFirst:true},1000); //image 2 comes with fold effect
@@ -113,7 +113,7 @@ $(document).ready(function(){
         $('figure').hide('clip', {direction:'vertical'},1000); // image 3 goes with clip effect
         break;
       case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250959/Projets/Carrousel/Justin-Jr-WebDev-min-min.jpg':
-        $('figure').hide('explode',{pieces:128},1000); // image 0 goes with explode effect
+        $('figure').hide( "puff", {percent:5},1000); // image 0 goes with explode effect
         break;
       case 'https://res.cloudinary.com/monwebmestre/image/upload/v1600250960/Projets/Carrousel/Carousel-coded-with-jQuery-min.jpg':
         $('figure').hide('fold',{horizFirst:true},1000); // image 1 goes with fold effect
